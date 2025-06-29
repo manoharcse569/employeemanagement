@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.manohar.exception.CSVParsingException;
-import com.manohar.service.EmployeeService;
 import com.manohar.vo.Employee;
 
 public class EmployeeRepository {
@@ -24,7 +23,7 @@ public class EmployeeRepository {
 	private static List<Employee> loadEmployees(String filePath) {
 		List<Employee> employees = new ArrayList<>();
 
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(EmployeeService.class.getResourceAsStream(filePath)))) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(EmployeeRepository.class.getResourceAsStream(filePath)))) {
 			String line;
 			br.readLine();
 			while((line = br.readLine())!=null) {
