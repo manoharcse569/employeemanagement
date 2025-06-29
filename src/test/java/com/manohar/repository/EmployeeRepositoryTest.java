@@ -18,6 +18,7 @@ public class EmployeeRepositoryTest {
 
 	@Test
 	public void getEmployeesTest() {
+		//Arrange
 		List<Employee> expectedEmployees = List.of(
 				new Employee(123, "Joe", "Doe", 60000d, null),
 				new Employee(124, "Martin", "Chekov", 45000d, 123),
@@ -25,13 +26,17 @@ public class EmployeeRepositoryTest {
 				new Employee(300, "Alice", "Hasacat", 50000d, 124),
 				new Employee(305, "Brett", "Hardleaf", 34000d, 300));
 
+		//Act
 		List<Employee> actualEmployees =	employeeRepository.getEmployees();
 		System.out.println("actualEmployees:"+actualEmployees);
+		
+		//Assert
 		Assert.assertEquals(expectedEmployees, actualEmployees);
 	}
 
 	@Test
 	public void loadEmployeesWithInvalidFormatExceptionTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
+		//Act
 		Method method = employeeRepository.getClass().getDeclaredMethod("loadEmployees", String.class);
 		method.setAccessible(true);
 
@@ -40,11 +45,14 @@ public class EmployeeRepositoryTest {
 		});
 
 		CSVParsingException csvParsingException = (CSVParsingException) exception.getCause();
+		
+		//Assert
 		Assert.assertEquals("invalid csv file format. Please validate", csvParsingException.getMessage());
 	}
 	
 	@Test
 	public void loadEmployeesWithNumberFormatExceptionTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
+		//Act
 		Method method = employeeRepository.getClass().getDeclaredMethod("loadEmployees", String.class);
 		method.setAccessible(true);
 
@@ -53,6 +61,8 @@ public class EmployeeRepositoryTest {
 		});
 
 		CSVParsingException csvParsingException = (CSVParsingException) exception.getCause();
+		
+		//Assert
 		Assert.assertEquals("exception occurred while parsing csv file", csvParsingException.getMessage());
 	}
 
