@@ -13,9 +13,21 @@ import com.manohar.vo.Employee;
 public class EmployeeServiceTest {
 	
 	private EmployeeService employeeService = new EmployeeService();
+	
+	@Test
+	public void test() {
+		//Arrange
+		Map<Integer, Double> expectedOutput = Map.of(124,-15000.0);
+		
+		//Act
+		Map<Integer, Double> managerEarningLessThanElgible = employeeService.getManagersGettingLessThanElgible();
+		
+		//Assert
+		Assert.assertEquals(expectedOutput, managerEarningLessThanElgible);
+	}
 
 	@Test
-	public void test() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
+	public void getManagersGettingLessThanElgibleTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
 		//Arrange
 		List<Employee> employees = List.of(
 				new Employee(123, "Joe", "Doe", 60000d, null),
@@ -23,10 +35,11 @@ public class EmployeeServiceTest {
 				new Employee(125, "Bob", "Ronstad", 47000d, 123),
 				new Employee(300, "Alice", "Hasacat", 50000d, 124),
 				new Employee(305, "Brett", "Hardleaf", 34000d, 300));
+		
 		Map<Integer, Double> expectedOutput = Map.of(124,-15000.0);
 		
 		//Act
-	Method method =	employeeService.getClass().getDeclaredMethod("getManagerGettingLessThanElgible", List.class);
+	Method method =	employeeService.getClass().getDeclaredMethod("getManagersGettingLessThanElgible", List.class);
 	method.setAccessible(true);
 	Map<Integer, Double> managerEarningLessThanElgible = (Map<Integer, Double>) method.invoke(employeeService, employees);
 	

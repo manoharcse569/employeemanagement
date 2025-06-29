@@ -31,14 +31,14 @@ public class EmployeeService {
 		List<Employee> employees = employeeRepository.getEmployees();
 		System.out.println("employees:"+employees);
 		
-		Map<Integer, Double> managerEarningLessThanElgible = getManagerGettingLessThanElgible(employees);
+		Map<Integer, Double> managerEarningLessThanElgible = getManagersGettingLessThanElgible(employees);
 		
 		return managerEarningLessThanElgible;
 	}
 
 
 
-	private Map<Integer, Double> getManagerGettingLessThanElgible(List<Employee> employees) {
+	private Map<Integer, Double> getManagersGettingLessThanElgible(List<Employee> employees) {
 		// map manager and reporting employees 
 		Map<Employee, List<Employee>> managerEmployeeMap =	employees.stream().collect(Collectors.toMap(m->m, m-> {
 			return employees.stream().filter(e->
