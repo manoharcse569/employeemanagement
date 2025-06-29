@@ -1,4 +1,4 @@
-package com.manohar.repository;
+package com.manohar.exception;
 
 public class CSVParsingException extends RuntimeException {
 	
