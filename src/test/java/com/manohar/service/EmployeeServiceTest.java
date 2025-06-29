@@ -15,7 +15,7 @@ public class EmployeeServiceTest {
 	private EmployeeService employeeService = new EmployeeService();
 	
 	@Test
-	public void test() {
+	public void getManagersGettingLessThanElgibleFromCsvTest() {
 		//Arrange
 		Map<Integer, Double> expectedOutput = Map.of(124,-15000.0);
 		
@@ -27,7 +27,7 @@ public class EmployeeServiceTest {
 	}
 
 	@Test
-	public void getManagersGettingLessThanElgibleTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
+	public void getManagersGettingLessThanElgibleFromInputTest() throws NoSuchMethodException, SecurityException, IllegalAccessException, InvocationTargetException {
 		//Arrange
 		List<Employee> employees = List.of(
 				new Employee(123, "Joe", "Doe", 60000d, null),
