@@ -1,5 +1,7 @@
 package com.manohar.vo;
 
+import java.util.Objects;
+
 public class Employee {
 
 	private Integer id;
@@ -41,6 +43,27 @@ public class Employee {
 
 	public Integer getManagerId() {
 		return managerId;
+	}
+	
+	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstName, id, lastName, managerId, salary);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		return Objects.equals(firstName, other.firstName) && Objects.equals(id, other.id)
+				&& Objects.equals(lastName, other.lastName) && Objects.equals(managerId, other.managerId)
+				&& Objects.equals(salary, other.salary);
 	}
 
 	@Override
