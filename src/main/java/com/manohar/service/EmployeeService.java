@@ -17,28 +17,70 @@ public class EmployeeService {
 		EmployeeService employeeService = new EmployeeService();
 		
 		//1. which managers earn less than they should, and by how much
-		employeeService.getManagersGettingLessThanElgible();
+		//employeeService.getManagersGettingLessThanElgible();
 		
 		
-		
+		//2. managers earn more than they should, and by how much
+		employeeService.getManagersGettingMoreThanEligible();
 	}
 	
 	
 
-	public Map<Integer, Double> getManagersGettingLessThanElgible() {
+	public Map<Integer, Double> getManagersGettingLessThanEligible() {
 		
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
 		System.out.println("employees:"+employees);
 		
-		Map<Integer, Double> managerEarningLessThanElgible = getManagersGettingLessThanElgible(employees);
+		Map<Integer, Double> managerEarningLessThanEligible = getManagersGettingLessThanEligible(employees);
 		
+		return managerEarningLessThanEligible;
+	}
+	
+	public Map<Integer, Double> getManagersGettingMoreThanEligible() {
+		
+		// get employees from csv
+		List<Employee> employees = employeeRepository.getEmployees();
+		System.out.println("employees:"+employees);
+		
+		Map<Integer, Double> managerEarningMoreThanEligible = getManagersGettingMoreThanEligible(employees);
+		
+		return managerEarningMoreThanEligible;
+	}
+
+
+
+	private Map<Integer, Double> getManagersGettingMoreThanEligible(List<Employee> employees) {
+		Map<Employee, Double> managerAvgSalaryMap = getManagerWithAverageSalaryOfReportingEmployees(employees);
+		
+		// most eligible salary for each manager
+		Map<Employee, Double> managerWithMostEligibleSalary = managerAvgSalaryMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue()*1.5));
+		System.out.println("managerWithMostEligibleSalary:"+managerWithMostEligibleSalary);
+		
+		// managers earning more than most eligible to them
+		Map<Integer, Double> managerEarningMoreThanEligible = managerWithMostEligibleSalary.entrySet().stream().filter(es-> es.getKey().getSalary()>es.getValue()).collect(Collectors.toMap(es->es.getKey().getId(), es->es.getKey().getSalary()-es.getValue()));
+		System.out.println("managerEarningMoreThanEligible:"+managerEarningMoreThanEligible);
+		return managerEarningMoreThanEligible;
+	}
+
+
+
+	private Map<Integer, Double> getManagersGettingLessThanEligible(List<Employee> employees) {
+		Map<Employee, Double> managerAvgSalaryMap = getManagerWithAverageSalaryOfReportingEmployees(employees);
+		
+		// least eligible salary for each manager
+		Map<Employee, Double> managerWithLeastEligibleSalary = managerAvgSalaryMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue()*1.2));
+		System.out.println("managerWithLeastEligibleSalary:"+managerWithLeastEligibleSalary);
+		
+		// managers earning less than least eligible to them
+		Map<Integer, Double> managerEarningLessThanElgible = managerWithLeastEligibleSalary.entrySet().stream().filter(es-> es.getKey().getSalary()<es.getValue()).collect(Collectors.toMap(es->es.getKey().getId(), es->es.getKey().getSalary()-es.getValue()));
+		System.out.println("managerEarningLessThanEligible:"+managerEarningLessThanElgible);
 		return managerEarningLessThanElgible;
 	}
 
 
 
-	private Map<Integer, Double> getManagersGettingLessThanElgible(List<Employee> employees) {
+	private Map<Employee, Double> getManagerWithAverageSalaryOfReportingEmployees(List<Employee> employees) {
 		// map manager and reporting employees 
 		Map<Employee, List<Employee>> managerEmployeeMap =	employees.stream().collect(Collectors.toMap(m->m, m-> {
 			return employees.stream().filter(e->
@@ -59,15 +101,7 @@ public class EmployeeService {
 		// get average salaries of reporting employees of each manager
 		Map<Employee, Double> managerAvgSalaryMap =	managerWithEmployeeMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue().stream().map(e->e.getSalary()).collect(Collectors.averagingDouble(s->s))));
 		System.out.println("managerAvgSalaryMap:"+managerAvgSalaryMap);
-		
-		// least eligible salary for each manager
-		Map<Employee, Double> managerWithLeastEligibleSalary = managerAvgSalaryMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue()*1.2));
-		System.out.println("managerWithLeastEligibleSalary:"+managerWithLeastEligibleSalary);
-		
-		// managers earning less than least eligible to them
-		Map<Integer, Double> managerEarningLessThanElgible = managerWithLeastEligibleSalary.entrySet().stream().filter(es-> es.getKey().getSalary()<es.getValue()).collect(Collectors.toMap(es->es.getKey().getId(), es->es.getKey().getSalary()-es.getValue()));
-		System.out.println("managerEarningLessThanEligible:"+managerEarningLessThanElgible);
-		return managerEarningLessThanElgible;
+		return managerAvgSalaryMap;
 	}
 	
 }
