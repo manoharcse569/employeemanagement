@@ -97,6 +97,9 @@ public class EmployeeService {
 	private Map<Employee, Integer> getEmployeesWithMoreThanGivenManagersCountInBetweenThemAndCEO(int numberOfManagers,
 			List<Employee> employees) {
 		Map<Employee, Integer> employeeReportLineSizeMap = getEmployeeReportLineSize(employees);
+		
+		// here we need to identify employees having managers count in between employee and CEO is more than given number. 
+		// condition is employeeReportingLineSize > inputNumberOfManagers+1 . As user given value doesn't include CEO so added +1.
 		Map<Employee, Integer> employeeWithMoreThanGivenReportLineSizeMap = employeeReportLineSizeMap.entrySet().stream().filter(es->es.getValue()>numberOfManagers+1).collect(Collectors.toMap(es->es.getKey(), es->es.getValue()));
 		return employeeWithMoreThanGivenReportLineSizeMap;
 	}
