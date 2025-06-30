@@ -17,17 +17,20 @@ public class EmployeeService {
 		EmployeeService employeeService = new EmployeeService();
 		
 		//1. which managers earn less than they should, and by how much
-		employeeService.getManagersGettingLessThanEligible();
-		
+		Map<Integer, Double> managerEarningLessThanEligible = employeeService.getManagersGettingLessThanEligible();
+		System.out.println("managerEarningLessThanEligible:"+managerEarningLessThanEligible);
 		
 		//2. managers earn more than they should, and by how much
-		employeeService.getManagersGettingMoreThanEligible();
+		Map<Integer, Double> managerEarningMoreThanEligible = employeeService.getManagersGettingMoreThanEligible();
+		System.out.println("managerEarningMoreThanEligible:"+managerEarningMoreThanEligible);
 		
 		//3. employees have a reporting line which is too long, and by how much
-		employeeService.getEmployeeWithHighestReportingLineSize();
+		Map<Integer, List<Employee>> highestReportingLineSizeEmployees = employeeService.getEmployeeWithHighestReportingLineSize();
+		System.out.println("highestReportingLineSizeEmployees:"+highestReportingLineSizeEmployees);
 		
 		//identify all employees which have more than 4 managers between them and the CEO.
-		employeeService.getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO();
+		Map<Employee, Integer> employeeWithMoreThanGivenReportLineSizeMap = employeeService.getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO();
+		System.out.println("employeeWithMoreThanGivenReportLineSizeMap:"+employeeWithMoreThanGivenReportLineSizeMap);
 	}
 	
 	
@@ -36,7 +39,7 @@ public class EmployeeService {
 		
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
-		System.out.println("employees:"+employees);
+		//System.out.println("employees:"+employees);
 		
 		Map<Integer, Double> managerEarningLessThanEligible = getManagersGettingLessThanEligible(employees);
 		
@@ -47,7 +50,7 @@ public class EmployeeService {
 		
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
-		System.out.println("employees:"+employees);
+		//System.out.println("employees:"+employees);
 		
 		Map<Integer, Double> managerEarningMoreThanEligible = getManagersGettingMoreThanEligible(employees);
 		
@@ -57,10 +60,10 @@ public class EmployeeService {
 	public Map<Integer, List<Employee>> getEmployeeWithHighestReportingLineSize() {
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
-		System.out.println("employees:"+employees);
+		//System.out.println("employees:"+employees);
 		
 		Map<Integer, List<Employee>> highestReportingLineSizeEmployees = getEmployeeWithHighestReportingLineSize(employees);
-		System.out.println("highestReportingLineSizeEmployees:"+highestReportingLineSizeEmployees);
+		//System.out.println("highestReportingLineSizeEmployees:"+highestReportingLineSizeEmployees);
 		return highestReportingLineSizeEmployees;
 	}
 
@@ -80,12 +83,12 @@ public class EmployeeService {
 	public Map<Employee, Integer> getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO() {
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
-		System.out.println("employees:"+employees);
+		//System.out.println("employees:"+employees);
 		
 		
 		Map<Employee, Integer> employeeWithMoreThanGivenReportLineSizeMap = getEmployeesWithMoreThanGivenManagersCountInBetweenThemAndCEO(
 				4, employees);
-		System.out.println("employeeWithMoreThanGivenReportLineSizeMap:"+employeeWithMoreThanGivenReportLineSizeMap);
+		//System.out.println("employeeWithMoreThanGivenReportLineSizeMap:"+employeeWithMoreThanGivenReportLineSizeMap);
 	    return employeeWithMoreThanGivenReportLineSizeMap;
 	}
 
@@ -102,7 +105,7 @@ public class EmployeeService {
 		
 		// get employees from csv
 		List<Employee> employees = employeeRepository.getEmployees();
-		System.out.println("employees:"+employees);
+		//System.out.println("employees:"+employees);
 		
 		Map<Employee, Integer> employeeReportLineSizeMap = getEmployeeReportLineSize(employees);
 		
@@ -124,7 +127,7 @@ public class EmployeeService {
 			
 			employeeReportLineSizeMap.put(employee, managerCount);
 		}
-		System.out.println("employeeReportLineSizeMap:"+employeeReportLineSizeMap);
+		//System.out.println("employeeReportLineSizeMap:"+employeeReportLineSizeMap);
 		return employeeReportLineSizeMap;
 	}
 
@@ -138,11 +141,11 @@ public class EmployeeService {
 		
 		// most eligible salary for each manager
 		Map<Employee, Double> managerWithMostEligibleSalary = managerAvgSalaryMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue()*1.5));
-		System.out.println("managerWithMostEligibleSalary:"+managerWithMostEligibleSalary);
+		//System.out.println("managerWithMostEligibleSalary:"+managerWithMostEligibleSalary);
 		
 		// managers earning more than most eligible to them
 		Map<Integer, Double> managerEarningMoreThanEligible = managerWithMostEligibleSalary.entrySet().stream().filter(es-> es.getKey().getSalary()>es.getValue()).collect(Collectors.toMap(es->es.getKey().getId(), es->es.getKey().getSalary()-es.getValue()));
-		System.out.println("managerEarningMoreThanEligible:"+managerEarningMoreThanEligible);
+		//System.out.println("managerEarningMoreThanEligible:"+managerEarningMoreThanEligible);
 		return managerEarningMoreThanEligible;
 	}
 
@@ -153,11 +156,11 @@ public class EmployeeService {
 		
 		// least eligible salary for each manager
 		Map<Employee, Double> managerWithLeastEligibleSalary = managerAvgSalaryMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue()*1.2));
-		System.out.println("managerWithLeastEligibleSalary:"+managerWithLeastEligibleSalary);
+		//System.out.println("managerWithLeastEligibleSalary:"+managerWithLeastEligibleSalary);
 		
 		// managers earning less than least eligible to them
 		Map<Integer, Double> managerEarningLessThanElgible = managerWithLeastEligibleSalary.entrySet().stream().filter(es-> es.getKey().getSalary()<es.getValue()).collect(Collectors.toMap(es->es.getKey().getId(), es->es.getKey().getSalary()-es.getValue()));
-		System.out.println("managerEarningLessThanEligible:"+managerEarningLessThanElgible);
+		//System.out.println("managerEarningLessThanEligible:"+managerEarningLessThanElgible);
 		return managerEarningLessThanElgible;
 	}
 
@@ -174,16 +177,16 @@ public class EmployeeService {
 				return false;
 			}).toList();
 		},(e1,e2)->e1, LinkedHashMap::new));
-		System.out.println("managerEmployeeMap:"+managerEmployeeMap);
+		//System.out.println("managerEmployeeMap:"+managerEmployeeMap);
 		
 		
 		// get map of manager and reporting employees with at least one reporting employee to manager 
 		Map<Employee, List<Employee>> managerWithEmployeeMap =	 managerEmployeeMap.entrySet().stream().filter(es->es.getValue().size()>0).collect(Collectors.toMap(es->es.getKey(), es->es.getValue()));
-		System.out.println("managerWithEmployeeMap:"+managerWithEmployeeMap);
+		//System.out.println("managerWithEmployeeMap:"+managerWithEmployeeMap);
 		
 		// get average salaries of reporting employees of each manager
 		Map<Employee, Double> managerAvgSalaryMap =	managerWithEmployeeMap.entrySet().stream().collect(Collectors.toMap(es->es.getKey(), es->es.getValue().stream().map(e->e.getSalary()).collect(Collectors.averagingDouble(s->s))));
-		System.out.println("managerAvgSalaryMap:"+managerAvgSalaryMap);
+		//System.out.println("managerAvgSalaryMap:"+managerAvgSalaryMap);
 		return managerAvgSalaryMap;
 	}
 	

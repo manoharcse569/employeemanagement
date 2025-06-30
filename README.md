@@ -1,5 +1,11 @@
 # ReadMe
 
+In case of any clarifications please reach me at 
+
++91 9052937930(call)
++91 9916826694(whatsapp)
+manohargurram547@gmail.com(email)
+
 Requirements:
 
 1. load employees from CSV
@@ -27,5 +33,7 @@ EmployeeRepository.java:
 	
 Note: 
 
-* consider system.out.println equivalent to logger.debug()/logger.info() based on the need in production grade applications
+* consider //System.out.println() equivalent to logger.debug() in production grade application
+* consider System.out.println() equivalent to logger.info() in production grade application
 * here in production grade applications we can use junit-jupiter, mockito using spring-boot-starter-test. But for as mentioned in the        documentation used junit for simplicity
+* written additional test cases with modified values to cover more cases and to increase code coverage
