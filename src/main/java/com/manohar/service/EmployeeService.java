@@ -3,6 +3,7 @@ package com.manohar.service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.manohar.repository.EmployeeRepository;
@@ -21,7 +22,13 @@ public class EmployeeService {
 		
 		
 		//2. managers earn more than they should, and by how much
-		employeeService.getManagersGettingMoreThanEligible();
+		//employeeService.getManagersGettingMoreThanEligible();
+		
+		//3. employees have a reporting line which is too long, and by how much
+		//employeeService.getEmployeeWithHighestReportingLineSize();
+		
+		//identify all employees which have more than 4 managers between them and the CEO.
+		employeeService.getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO();
 	}
 	
 	
@@ -47,7 +54,84 @@ public class EmployeeService {
 		
 		return managerEarningMoreThanEligible;
 	}
+	
+	public Map<Integer, List<Employee>> getEmployeeWithHighestReportingLineSize() {
+		// get employees from csv
+		List<Employee> employees = employeeRepository.getEmployees();
+		System.out.println("employees:"+employees);
+		
+		Map<Integer, List<Employee>> highestReportingLineSizeEmployees = getEmployeeWithHighestReportingLineSize(employees);
+		System.out.println("highestReportingLineSizeEmployees:"+highestReportingLineSizeEmployees);
+		return highestReportingLineSizeEmployees;
+	}
 
+
+
+	private Map<Integer, List<Employee>> getEmployeeWithHighestReportingLineSize(List<Employee> employees) {
+		Map<Employee, Integer> employeeReportLineSizeMap = getEmployeeReportLineSize(employees);
+		
+		var entry = employeeReportLineSizeMap.entrySet().stream().collect(Collectors.groupingBy(es->es.getValue())).entrySet().stream().max((e1,e2)->e1.getKey()-e2.getKey()).orElse(null);
+		Map<Integer, List<Employee>> highestReportingLineSizeEmployees = new LinkedHashMap<>();
+		if(entry!=null) {
+			highestReportingLineSizeEmployees.put(entry.getKey(),entry.getValue().stream().map(e->e.getKey()).toList());
+		}
+		return highestReportingLineSizeEmployees;
+	}
+	
+	public Map<Employee, Integer> getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO() {
+		// get employees from csv
+		List<Employee> employees = employeeRepository.getEmployees();
+		System.out.println("employees:"+employees);
+		
+		
+		Map<Employee, Integer> employeeWithMoreThanGivenReportLineSizeMap = getEmployeesWithMoreThanGivenManagersCountInBetweenThemAndCEO(
+				4, employees);
+		System.out.println("employeeWithMoreThanGivenReportLineSizeMap:"+employeeWithMoreThanGivenReportLineSizeMap);
+	    return employeeWithMoreThanGivenReportLineSizeMap;
+	}
+
+
+
+	private Map<Employee, Integer> getEmployeesWithMoreThanGivenManagersCountInBetweenThemAndCEO(int numberOfManagers,
+			List<Employee> employees) {
+		Map<Employee, Integer> employeeReportLineSizeMap = getEmployeeReportLineSize(employees);
+		Map<Employee, Integer> employeeWithMoreThanGivenReportLineSizeMap = employeeReportLineSizeMap.entrySet().stream().filter(es->es.getValue()>numberOfManagers+1).collect(Collectors.toMap(es->es.getKey(), es->es.getValue()));
+		return employeeWithMoreThanGivenReportLineSizeMap;
+	}
+	
+	public Map<Employee, Integer> getEmployeeReportLineSize() {
+		
+		// get employees from csv
+		List<Employee> employees = employeeRepository.getEmployees();
+		System.out.println("employees:"+employees);
+		
+		Map<Employee, Integer> employeeReportLineSizeMap = getEmployeeReportLineSize(employees);
+		
+		return employeeReportLineSizeMap;
+	}
+
+
+
+	private Map<Employee, Integer> getEmployeeReportLineSize(List<Employee> employees) {
+		Map<Employee, Integer> employeeReportLineSizeMap = new LinkedHashMap<>();
+		for(Employee employee: employees) {
+			Employee currentEmployee = employee;
+			int managerCount = 0;
+			while(currentEmployee.getManagerId() != null) {
+				Employee manager = getEmployeeById(employees, currentEmployee.getManagerId());
+				managerCount++;
+				currentEmployee = manager;
+			}
+			
+			employeeReportLineSizeMap.put(employee, managerCount);
+		}
+		System.out.println("employeeReportLineSizeMap:"+employeeReportLineSizeMap);
+		return employeeReportLineSizeMap;
+	}
+
+	private Employee getEmployeeById(List<Employee> employees, Integer employeeId) {
+		return employees.stream().filter(e->e.getId().equals(employeeId)).findFirst().orElse(null);
+	}
 
 
 	private Map<Integer, Double> getManagersGettingMoreThanEligible(List<Employee> employees) {
