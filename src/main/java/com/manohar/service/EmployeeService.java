@@ -3,7 +3,6 @@ package com.manohar.service;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.manohar.repository.EmployeeRepository;
@@ -18,14 +17,14 @@ public class EmployeeService {
 		EmployeeService employeeService = new EmployeeService();
 		
 		//1. which managers earn less than they should, and by how much
-		//employeeService.getManagersGettingLessThanElgible();
+		employeeService.getManagersGettingLessThanEligible();
 		
 		
 		//2. managers earn more than they should, and by how much
-		//employeeService.getManagersGettingMoreThanEligible();
+		employeeService.getManagersGettingMoreThanEligible();
 		
 		//3. employees have a reporting line which is too long, and by how much
-		//employeeService.getEmployeeWithHighestReportingLineSize();
+		employeeService.getEmployeeWithHighestReportingLineSize();
 		
 		//identify all employees which have more than 4 managers between them and the CEO.
 		employeeService.getEmployeesWithMoreThanFourManagersInBetweenThemAndCEO();
